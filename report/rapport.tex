@@ -1,0 +1,327 @@
+\documentclass[a4paper,11pt,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{lmodern}
+\usepackage[final,expansion=true,protrusion=true]{microtype}
+\usepackage[top=30mm,bottom=20mm,left=18mm,right=18mm,headheight=20mm]{geometry}
+\usepackage[hidelinks,unicode]{hyperref}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{kantlipsum}
+
+\title{SYM 2015\\--\\Utilisation de données environnementales}
+\author{%
+Laurent Girod \href{mailto:laurent.girod@heig-vd.ch}{\texttt{<laurent.girod@heig-vd.ch>}}\\%
+Nicolas Kobel \href{mailto:nicolas.kobel@heig-vd.ch}{\texttt{<nicolas.kobel@heig-vd.ch>}}%
+%Rick Wertenbroek \href{mailto:rick.wertenbroek@heig-vd.ch}{\texttt{<rick.wertenbroek@heig-vd.ch>}}\\%
+%Cyrill Zundler \href{mailto:cyrill.zundler@heig-vd.ch}{\texttt{<cyrill.zundler@heig-vd.ch>}}%
+}
+\date{\today}
+
+% Uncomment if sans serif font is preferred.
+%\renewcommand*{\familydefault}{\sfdefault}
+\renewcommand{\headrulewidth}{1pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex}
+
+\lhead{SYM 2015 -- Utilisation de données environnementales}
+\chead{}
+\rhead{\includegraphics[height=8mm]{logo.pdf}}
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
+
+\pagestyle{fancy}
+
+\begin{document}
+\maketitle{}
+\section{Balises NFC}
+\subsection*{Questions}
+\textit{Sachant que les collaborateurs de l'entreprise UBIQOMP SA se déplacent en véhiculant des
+informations extrêmement précieuses dans leurs dispositifs informatiques mobiles (munis de dispositifs de
+lecture NFC), et qu'ils sont amenés à se rendre dans des zones à risque, un expert a fait les estimations
+suivantes:}
+\begin{itemize}
+	\item \textit{La probabilité de vol d'un mobile par une personne malintentionnée et capable d'utiliser les
+		données à des fins préjudiciables pour la société est de 1\%}
+	\item \textit{La probabilité que le mot de passe puisse être découvert, soit par analyse des traces de doigts sur
+		l'écran, soit par observation en cours d'utilisation est de 5\%}
+	\item \textit{La probabilité de vol du porte-clés est de 0.1\%}
+	\item \textit{Environ 10\% des criminels susceptibles d'accéder aux données du mobile sait que le porte-clés
+		donne accès au mobile}
+\end{itemize}
+
+\textit{Quelle est la probabilité moyenne globale que des données soient perdues, dans le cas où il faut la
+balise ET le mot de passe, ainsi que dans le cas où il faut la balise OU le mot de passe, ou encore le cas où
+seule la balise est nécessaire? En d'autres termes, si l'on envoie cent collaborateurs dans la géographie,
+quel est le risque encouru de vol de données sensibles? Mettre vos conclusions en rapport avec l'inconfort
+subjectif de chaque solution.}
+
+Nous formalisons le problème ainsi:
+
+Soient:
+\begin{itemize}
+	\item $M$ l'évènement ``le mobile est volé par une personne malintentionnée et capable d'utiliser les données
+		à des fins préjudiciables pour la société'',
+	\item $P$ l'évènement ``le mot de passe est découvert'',
+	\item $B$ l'évènement ``la balise (sur le porte-clés) est volée'',
+	\item $S$ l'évènement ``le criminel sais que le porte clé donne accès au mobile''.
+\end{itemize}
+
+On a les probabilités suivantes:
+\begin{align}
+	P(M) = 0.01 \\
+	P(P) = 0.05 \\
+	P(B) = 0.001 \\
+	P(S | M) = 0.1 \\
+\end{align}
+
+On suppose que toutes ces probabilités sont indépendantes.
+
+La probabilité que des données soient perdues dans le cas où il faut la balise \textbf{et} le mot de passe est:
+\begin{multline}
+	P(S\cap P\cap B)
+	= P(S) P(P) P(B)
+	= P(S | M) P(M) P(P) P(B)
+	\\
+	= 0.1\cdot 0.01\cdot 0.05\cdot 0.001
+	= 5.00\cdot 10^{-8}
+\end{multline}
+
+La probabilité de perte de données dans ce cas est donc 1 chance sur 20 millions.
+
+La probabilité que des données soient perdues dans le cas où il faut la balise \textbf{ou} le mot de passe est:
+\begin{multline}
+	P\left((S\cap B)\cup (M\cap P)\right)
+	= \left(P(S) P(B)\right) + \left(P(M) P(P)\right)
+	= \left(P(S | M) P(M) P(B)\right) + \left(P(M) P(P)\right)
+	\\
+	= (0.1\cdot 0.01\cdot 0.001) + (0.01\cdot 0.05)
+	= 5.01\cdot 10^{-4}
+\end{multline}
+
+La probabilité de perte de données dans ce cas est donc un peu plus que 1 chance sur 2000.
+
+La probabilité que des données soient perdues dans le cas où seule le mot de passe est nécessaire est:
+\begin{multline}
+	P\left(M\cap P\right)
+	= \left(P(M) P(P)\right)
+	= \left(P(M) P(P)\right)
+	\\
+	= (0.01\cdot 0.05)
+	= 5.00\cdot 10^{-4}
+\end{multline}
+
+La probabilité de perte de données dans ce cas est donc 1 chance sur 2000.
+
+La probabilité que des données soient perdues dans le cas où seule la balise est nécessaire est:
+\begin{multline}
+	P\left(S\cap B\right)
+	= \left(P(S) P(B)\right)
+	= \left(P(S | M) P(M) P(B)\right)
+	\\
+	= (0.1\cdot 0.01\cdot 0.001)
+	= 1.00\cdot 10^{-6}
+\end{multline}
+
+La probabilité de perte de données dans ce cas est donc 1 chance sur un million.
+
+%Mettre vos conclusions en rapport avec l'inconfort subjectif de chaque solution.
+
+Parmi les risques autre que le vol, viennent également le risque d'oubli du mot de passe et le risque de perte
+de la balise. Il faudrait aussi les prendre en compte, mais dans le cas de ce laboratoire, nous les ignoreront
+pour simplifier l'analyse de risque.
+
+Chacune de ces solutions complique un peu l'utilisation de l'application. Dans le cas d'un mot de passe,
+l'utilisateur doit l'entrer régulièrement avant de pouvoir utiliser une fonctionnalité critique de
+l'application. Dans le cas de la balise, l'utilisateur dit sortir son porte-clés et passer la balise sur le dos
+de son téléphone portable avant de pouvoir utiliser une fonctionnalité critique (ce qui implique que
+l'utilisateur devra aussi avoir son porte-clés sur lui à chaque fois qu'il accède à une de ces fonctionnalités
+critiques). Comme nous ignorons quel sera l'impact business d'un vol de donnée, les trois cas sont analysés, la
+solution à privilégier dépendra donc des données traitées par l'application.
+
+\paragraph{Mot de passe et balise}
+C'est la solution la plus contraignante pour l'utilisateur, puisqu'il devra entrer son mot de passe et sortir
+son porte-clés. Par contre, c'est la solution la plus sécurisée qu'il y ait, la probabilité d'un vol de donnée
+est d'une chance sur 20'000'000. Cette méthode sera donc a privilégier seulement dans le cas où les informations
+traitées seront de très grande importance, et qui seront accédées rarement (pour ne pas trop gêner l'utilisateur).
+
+\paragraph{Mot de passe ou balise}
+C'est la solution (sécurisée) la moins contraignante pour l'utilisateur, il pourra choisir soit d'entrer son
+mot de passe, soit de sortir son porte-clés. La sécurité offerte par cette solution n'est par contre pas très
+élevée, la probabilité d'un vol de donnée est d'un peu plus qu'une chance sur 2000. La sécurité est à peu près
+comparable à l'utilisation d'un mot de passe seul. Cette méthode sera donc a privilégier si les données traitées
+ne sont pas de trop grande importance, mais qu'il est quand même souhaitable de protéger (par exemple pour des
+raisons légales). C'est donc une solution a implémenter si on désire augmenter le confort d'utilisation de
+l'application, plus que sa sécurité.
+
+\paragraph{Balise seule}
+C'est une solution offrant une bonne sécurité, la probabilité d'un vol de donnée est d'une chance sur 1'000'000,
+et n'étant pas trop inconfortable pour l'utilisateur (il lui ``suffit'' de sortir son porte-clés). \c{C}a sera
+donc la solution à privilégier si les données traitées seront de grande importance, mais auxquelles l'utilisateur
+devra souvent accéder (utiliser la première solution serait alors trop gênant pour l'utilisateur).
+
+\textit{Peut-on améliorer la situation en introduisant un contrôle des informations d'authentification par un
+serveur éloigné (transmission d'un "hash" genre MD5 du mot de passe et de la balise NFC)? Si oui, à quelles
+conditions? Quels inconvénients?}
+
+Dans le scénario où les accréditations sont envoyées à un serveur distant qui renvoie ses accréditations pour
+permettre d'accéder aux données, il est possible d'améliorer un peu la sécurité, à condition que le serveur soit
+notifié qu'une accréditation a été compromise. Dans ce cas un voleur aura un temps limité pour tenter d'accéder
+aux données (le temps que l'annonce du vol soit rapporté). Comme il peut se passer une durée assez longue entre
+le vol et l'annonce du vol (quelques heures à quelques jours), il est possible que le voleur ait réussisse à
+accéder aux données dans ce délai. L'amélioration de la sécurité est donc modeste.
+
+Ces contrôles supplémentaires sont par contre très contraignant dans le cas d'une application mobile, les données
+ne seront accessibles que lorsqu'il est possible de se connecter au serveur. Pour palier (partiellement) à ce
+problème, une solution serait de donner une durée de vie à une accréditation du serveur, et que la connexion à ce
+dernier ne se fasse que ci cette durée de vie était dépassée. Mais même dans ce cas, il serait nécessaire de que
+l'application se connecte au serveur de temps à autre, et il n'est pas garanti qu'une telle connexion puisse être
+établie au moment ou elle serait nécessaire.
+
+Les mesures à mettre en place seraient donc assez lourdes, et seraient potentiellement très inconfortable pour
+l'utilisateur puisqu'elle pourraient l'empêcher de travailler.
+
+\textit{Proposer une stratégie permettant à la société UBIQOMP SA d'améliorer grandement son bilan
+sécuritaire, en détailler les inconvénients pour les utilisateurs et pour la société.}
+
+Comme les informations véhiculées sont \emph{extrêmement précieuses}, il est souhaitable de privilégier une bonne
+sécurité, nous pouvons donc déjà exclure la deuxième solution (mot de passe ou balise), car elle n'offre pas une
+sécurité suffisante.
+
+Parmi les deux solutions restantes, la première (mot de passe et balise) est un peu moins confortable d'utilisation
+que la deuxième (balise seule) car l'utilisateur doit taper son mot de passe en plus de sortir son porte-clés. Même
+si la première solution est théoriquement 20 fois plus sûre que la seconde, les deux sont des probabilités minimes.
+
+En supposant que les employés de l'entreprise aient souvent besoin d'accéder à ces données critiques, et qu'ils ne
+sont pas trop souvent dans ces endroits à risque, la deuxième solution sera à privilégier, pour des raisons de confort
+d'utilisation.
+
+\section{Codes barres}
+\subsection*{Questions}
+\textit{Comparer la technologie à codes-barres et la technologie NFC, du point de vue d'une utilisation dans
+des applications pour smartphones, dans une optique:}
+\begin{itemize}
+\item \textit{Professionnelle (Authentification dure, Lettres de créance, accès bases de données, clés de chiffrage)}
+\item \textit{Grand public (ticketing, access control, e-paiement)}
+\item \textit{Ludique (preuves d'achat, identité électronique pour gaming, etc...)}
+\item \textit{Financier (coûts impliqués par le déploiement de la technologie, possibilités de recyclage, etc...)}
+\end{itemize}
+
+\paragraph{Dans le domaine professionnel}
+
+Dans le domaine professionnel, nous préfererons l'utilisation de la technologie NFC à celle d'un code barre.
+Il est en effet possible moyennant les coûts à de (grandes) entreprises d'équipper leurs employés d'outils pour la lecture et l'utilisation de TAGS NFC.
+
+Les tags NFC sont aussi plus sûrs que des identificateurs de type codes barres qui eux sont (plus) vite perdus et simplement photocopiables.
+
+\paragraph{Dans le domaine Grand Public}
+
+Nous allons éxaminer le domaine grand public sous les trois angles suivants :
+
+\begin{itemize}
+\item Authentification permanente
+\item Authentification ponctuelle
+\item Réalité augmentée
+\end{itemize}
+
+\subparagraph{Authentification permanente}
+
+Une authentification permanente personnelle rapide et sûre est souvent souhaitable.
+Les technologies NFC y ont vu un succes relatif ces dérniers temps surtout en temps que mode de payement pour de petit montant.
+D'autres applications récentes comme le nouvel abonement de train CFF ainsi que des abonements de loisirs divers reposent aussi avec un succès divers sur ces technologies.
+
+Le débat sur la sécurité et la confidentialité de ces données ne sera pas mené ici, mais il est évident que la falsifications de ces données est moins facile que celle d'un simple code-barre une fois de plus simplement photocopiable.
+
+\subparagraph{Authentification ponctuelle}
+
+Lorsque il ne faut que s'authentifier une fois, ou qu'il faut montrer une preuve d'achat, les coûts liés au NFC dépassent son utilité.
+
+En effet, les dernières années ont montré que des code barres, quil soient imprimés ou affichés sur écran, ont une réelle utilité en tant que preuve d'achat.
+Que se soit au CFF ou dans divers festivals, les codes barres en tout genre remplacent peux à peux les billets classiques.
+
+Plus simples à garder sur soi et plus rapide à vérifier que des imprimés, ils offrent des avantages autant pour le client que pour le vendeur.
+
+\subparagraph{Réalité Augmentée}
+
+Les codes barres étant faciles à placer, copier et analyser ils deviennent de plus en plus un moyen d'informer des gens.
+Que se soit pour informer une personne de l'histoire d'un bâtiment, des risques d'un itinéraire en montagne ou simplement des prochains horraires du bus, un code barre peut donner des informations ponctuelles et précises.
+
+Les codes barres sont d'autant plus éfficaces que la majorité d'utilisateurs de systèmes mobiles sont équipés d'une caméra mais pas de lecteurs NFC.
+
+\paragraph{Utilisation Ludique}
+
+L'utilisation ludique des et des NFC et des codes barres peuvent se défendre.
+
+De plus en plus les développeurs de jeux veulent intégrer leur produit à la vie de tous les jours.
+Pour offrir une immérsion quasi totale à leur client, les applications mobiles viennent compléter l'offre classique.
+
+Ici la décision entre NFC et codes barres doit se faire sur la valeur ajoutée.
+
+Un code peut être un moyen éfficace pour faire gagner à un client un objet innobtaignable sinon.
+C'est un moyen éfficace d'attirer les colléctionneurs ou de fidéliser les nouveaux clients.
+Un seul code facilement distribuable peut aussi faire office de publicité pour l'entreprise.
+
+Des objet avec NFC peuvent être imaginés intéragir entre eux, ainsi créant des liens entre leurs possésseurs.
+De plus ils pourraient débloquer des objet pour la personne qui l'utilise avec le système de base.
+
+\paragraph{Considérations Financières}
+
+Un tag NFC nécécite un support matériel dédié.
+Il en résulte un coût élevé pour des petites productions.
+La distribution de tags NFC demande par cette liaison matérielle un éffort considérable.
+Par l'objet une fois crée est durable et peut être passé de main en main ou reprogrammé. 
+
+Un code barre peut être imprimé sur n'importe quel support, et ne demande donc comme invéstissement que du temps, du papier et de l'encre.
+Chacun peut en créer sur n'importe quel site proposant cette fonctionnalité (p.ex. \url{http://www.myfeelback.com/fr/generateur-qr-code-gratuit-personnalisable}).
+Il est parcontre très difficile de changer le contenu du code, à moins de le faire pointer vers un site qu'on peut modifier à coeur joie.
+
+\textit{Est-il possible sans autres de remplacer la puce NFC par une carte à code QR dans l'exercice
+précédent, moyennant un simple  ajustement du code pour lire le code à barres. (Note : il existe de
+nombreux  générateurs  de codes  QR sur le web, comme par exemple
+\url{http://www.myfeelback.com/fr/generateur-qr-code-gratuit-personnalisable}).}
+
+\paragraph{Utilisation de QR à la place de NFC}
+
+Il est relativement aisé de modifier le code de l'application d'authentification pour utiliser un code QR à la place d'une puce NFC.
+Le seul problème est celui de déchiffrer l'image, mais bien assez de programmes externes existent qui peuvent nous livrer le résultat.
+
+\textit{L'un des projets que poursuit iict/useraware actuellement est l'identification de patients dans de
+grands centres hospitaliers. Reprendre les arguments développés dans le point précédent dans cette
+optique particulière, en tenant compte du fait que l'identification du patient est presque toujours couplée à
+celle du soignant qui effectue un acte médical envers ce patient.}
+
+\paragraph{Identification d'un Patient}
+Il semblerait intéressant d'identifier le soignant par NFC, d'après les raisons données dans les considérations au niveau professionnel et au niveau d'identification permanente.
+Enregistrer un patient avec identification NFC serait trop cher pour les avantages offerts par la technologie.
+
+\textit{Un autre projet qui a été entrepris en collaboration avec la société sysmosoft sa (et qui a aussi fait
+l'objet d'un projet de master à la HEIG-VD) est la reconnaissance  de contexte. Ainsi, selon le contexte dans
+lequel on se trouve, on va être plus ou moins tolérant vis-à-vis de l'accès à l'information. Imaginer les
+paramètres que l'on peut associer à un contexte, et pour chacun d'eux, estimer le degré de ``fiabilité'' de
+ce paramètre dans l'optique d'une méthode heuristique d'identification d'un contexte d'utilisation. Mettre
+en rapport les inconvénients et les avantages liés à l'utilisation du paramètre en question.}
+
+\paragraph{Reconnaissance de Contextes}
+\subparagraph{Localisation}
+
+En utilisant des sérvices de localisation, il est possible de mettre des barrières aux fuites de données.
+Ainsi certaines informations peuvent être redues accéssibles uniquement à des personnes dans une certaine plage d'IP, ou connéctés sur un certain point d'accés du réseau local.
+On peut aussi réstreindre l'accés à des localistions géogrphique utilisant les services GSM et/ou GPS.
+Ces mesures ne sont pas fiables à 100\%, et il peut être énérvant de devoir se trouver à un endroit précis pour pouvoir accéder à des données surtout si elles doivent être accédées en urgence.
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
